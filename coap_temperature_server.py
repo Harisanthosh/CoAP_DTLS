@@ -5,6 +5,8 @@ from gpiozero import MCP3008
 import time
 import datetime
 import sys
+import json
+import random
 import paho.mqtt.publish as publish
 
 class BasicResource(Resource):
@@ -100,8 +102,8 @@ class AdvancedResource(Resource):
         pot = MCP3008(0)
         val = pot.value
         global currenttemp
-        currenttemp = val
-        self.payload = "Hello From RPi3!!, Temp value is : %s" % (val)
+        currenttemp = random.randint(10,30)
+        self.payload = "Hello From RPi3!!, Temp value is : %s" % (currenttemp)
         self.resource_type = "rt1"
         self.content_type = "text/plain"
         self.interface_type = "if1"
@@ -109,7 +111,9 @@ class AdvancedResource(Resource):
     def render_GET_advanced(self, request, response):
         #pot = MCP3008(0)
         #val = pot.value
-        response.payload = "Temp value is : %s" % (currenttemp * 10000)
+        currenttemp = random.randint(10,30)
+        response.payload = "Temp value is : %s" % (currenttemp)
+	#response.payload = json.dumps({"Temp" : "%s" %(currenttemp * 10000)})
         response.max_age = 20
         response.code = defines.Codes.CONTENT.number
         return self, response
